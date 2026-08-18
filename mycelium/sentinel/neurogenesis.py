@@ -8,17 +8,22 @@ Prevents OOM from unbounded telemetry accumulation (~3000 rows/day).
 Designed for daily cron invocation via systemd .timer.
 """
 
+import os
+from pathlib import Path
+from dotenv import load_dotenv
 import psycopg2
 from datetime import datetime, timedelta
 import brie_medium
 
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
 # Superuser connection (must be able to DELETE from memory_logs)
 DB_CONFIG = {
-    "dbname": "telemetry",
-    "user": "ghostnode",
-    "password": "quantum_flex_auth",
-    "host": "127.0.0.1",
-    "port": "5432",
+    "dbname": os.environ.get("DB_NAME", "telemetry"),
+    "user": os.environ.get("GHOSTNODE_DB_USER", "ghostnode"),
+    "password": os.environ.get("GHOSTNODE_DB_PASSWORD", ""),
+    "host": os.environ.get("DB_HOST", "127.0.0.1"),
+    "port": os.environ.get("DB_PORT", "5432"),
 }
 
 RETENTION_DAYS = 7

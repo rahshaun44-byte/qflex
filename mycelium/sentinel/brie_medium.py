@@ -28,18 +28,21 @@ import struct
 import json
 import multiprocessing
 from dataclasses import dataclass, asdict
-from datetime import datetime, timezone
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 # Binary ABI Queue (Temporal Decoupling: Producer to Consumer)
 ipc_queue = multiprocessing.Queue()
 
 
 DB_CONFIG = {
-    "dbname": "telemetry",
-    "user": "ghostnode",
-    "password": "quantum_flex_auth",
-    "host": "127.0.0.1",
-    "port": "5432",
+    "dbname": os.environ.get("DB_NAME", "telemetry"),
+    "user": os.environ.get("GHOSTNODE_DB_USER", "ghostnode"),
+    "password": os.environ.get("GHOSTNODE_DB_PASSWORD", ""),
+    "host": os.environ.get("DB_HOST", "127.0.0.1"),
+    "port": os.environ.get("DB_PORT", "5432"),
 }
 
 @dataclass

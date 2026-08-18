@@ -23,16 +23,21 @@ Mathematical Model:
 import re
 import subprocess
 import logging
+import os
+from pathlib import Path
+from dotenv import load_dotenv
 import psycopg2
 from datetime import datetime
 
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
 # ── Configuration ─────────────────────────────────────────────────────────────
 PG_CONFIG = {
-    "dbname": "telemetry",
-    "user": "ghostnode",
-    "password": "quantum_flex_auth",
-    "host": "127.0.0.1",
-    "port": "5432",
+    "dbname": os.environ.get("DB_NAME", "telemetry"),
+    "user": os.environ.get("GHOSTNODE_DB_USER", "ghostnode"),
+    "password": os.environ.get("GHOSTNODE_DB_PASSWORD", ""),
+    "host": os.environ.get("DB_HOST", "127.0.0.1"),
+    "port": os.environ.get("DB_PORT", "5432"),
 }
 
 TARGET_NODE = "amara-matrix"
