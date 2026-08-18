@@ -1,0 +1,7 @@
+[Unit]
+Description=Test Tmpfs
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'touch /var/log/mycelium_test.log'
+TemporaryFileSystem=/var/log:ro

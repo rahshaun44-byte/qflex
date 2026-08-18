@@ -1,0 +1,2 @@
+Quantum Flex Swarm Protocol: The Hardstop mechanism engages when Euclidean Drive D > 1500. This protects the native OS from crashing due to high I/O Wait or OOM conditions.
+The Orchestrator is n8n, accessible at http://127.0.0.1:5678, which is used to visually route these alerts.

@@ -1,0 +1,21 @@
+[Unit]
+Description=A.M.A.R.A. Sync Dashboard
+After=network.target ghost-node-agent.service
+
+[Service]
+Environment="TZ=America/New_York"
+Type=simple
+WorkingDirectory=/home/rahshaunchambers/mycelium/amara
+ExecStart=/home/rahshaunchambers/mycelium/venv/bin/uvicorn dashboard:app --host 100.120.30.95 --port 8000
+Restart=always
+RestartSec=5s
+StandardOutput=append:%h/.local/state/amara/dashboard.log
+StandardError=inherit
+
+# Resource clamp — dashboard is a lightweight read layer
+CPUQuota=15%
+MemoryHigh=200M
+MemoryMax=300M
+
+[Install]
+WantedBy=default.target

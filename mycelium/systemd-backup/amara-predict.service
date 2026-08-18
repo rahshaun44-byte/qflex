@@ -1,0 +1,15 @@
+[Unit]
+Description=Quantum Flex Amara Predictive Routing
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/rahshaunchambers/mycelium
+ExecStart=/home/rahshaunchambers/mycelium/venv/bin/python3 -u mcp_layer/predictive_routing.py
+Environment=PYTHONUNBUFFERED=1
+StandardOutput=append:/run/user/1000/amara-predict.log
+StandardError=inherit
+
+# Resource clamp — linear regression must not infinite-loop on corrupt data
+CPUQuota=10%
+MemoryHigh=200M
+MemoryMax=250M

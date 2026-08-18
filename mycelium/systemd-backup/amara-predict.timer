@@ -1,0 +1,10 @@
+[Unit]
+Description=Quantum Flex Amara Predictive Routing Timer (5 min cycle)
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

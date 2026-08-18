@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "quantum-flex": {
+      "type": "http",
+      "url": "http://yoga.tail2b296e.ts.net:9000/mcp"
+    }
+  }
+}

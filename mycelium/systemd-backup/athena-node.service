@@ -1,0 +1,21 @@
+[Unit]
+Description=A.T.H.E.N.A. RAG Cognitive Node — Quantum Flex
+After=network.target ghost-node-agent.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/rahshaunchambers/mycelium/mcp_layer
+ExecStart=/home/rahshaunchambers/mycelium/venv/bin/uvicorn athena_api:app --host 100.120.30.95 --port 8001
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+StandardOutput=append:/run/user/1000/athena-node.log
+StandardError=inherit
+
+# Resource clamp — Ollama inference can spike; bound the API layer
+CPUQuota=25%
+MemoryHigh=512M
+MemoryMax=768M
+
+[Install]
+WantedBy=default.target

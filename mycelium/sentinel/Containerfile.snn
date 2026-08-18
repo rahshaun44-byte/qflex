@@ -1,0 +1,10 @@
+FROM python:3.10-slim
+
+# Install core neuromorphic dependencies (explicit versions for determinism)
+RUN pip install --no-cache-dir torch==2.5.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir snntorch==0.9.1
+
+WORKDIR /opt/sentinel
+COPY lif_sentinel.py .
+
+CMD ["python", "lif_sentinel.py"]

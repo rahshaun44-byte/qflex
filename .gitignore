@@ -1,0 +1,27 @@
+# Secrets — never commit
+.env
+.env.*
+*.pem
+*.key
+!**/mtls/*ca.pem
+
+# Runtime state / logs — not source
+*.db
+*.log
+*.bak
+*.part
+.tripwire/
+crash_log.txt
+
+# Reproducible / vendored — not source
+venv/
+node_modules/
+__pycache__/
+*.pyc
+build/
+third_party/
+
+# Local tool config — not project code
+.idea/
+.vscode/
+.claude/

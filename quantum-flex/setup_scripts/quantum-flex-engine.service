@@ -1,0 +1,35 @@
+[Unit]
+Description=Quantum Flex: Evidence Engine & ZK Substrate
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/libexec/quantum-flex/quantum_flex
+User=quantum-flex
+Group=quantum-flex
+EnvironmentFile=-/etc/quantum-flex/engine.env
+Environment=QF_DATA_DIR=/var/lib/quantum-flex
+Environment=QF_SERVER_CERT=/etc/quantum-flex/server.crt
+Environment=QF_SERVER_KEY=/etc/quantum-flex/server.key
+Environment=QF_ROOT_CA=/etc/quantum-flex/root-ca.crt
+Environment=QF_ED_PRIVATE_KEY=/etc/quantum-flex/ed_priv.pem
+Environment=QF_PQC_PRIVATE_KEY=/etc/quantum-flex/pqc_priv.pem
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+ReadWritePaths=/var/lib/quantum-flex
+KillSignal=SIGTERM
+TimeoutStopSec=15
+Restart=on-failure
+RestartSec=3
+WorkingDirectory=/var/lib/quantum-flex
+
+[Install]
+WantedBy=multi-user.target

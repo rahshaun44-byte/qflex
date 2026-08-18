@@ -1,0 +1,9 @@
+fastapi
+pydantic
+uvicorn
+chromadb
+rich
+aiohttp
+watchdog
+mcp
+requests

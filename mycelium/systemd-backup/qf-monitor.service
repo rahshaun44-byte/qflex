@@ -1,0 +1,19 @@
+[Unit]
+Description=A.M.A.R.A. Biological Monitor — Quantum Flex iowait Daemon
+After=network.target ghost-node-agent.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/rahshaunchambers/mycelium
+ExecStart=/home/rahshaunchambers/mycelium/venv/bin/python3 -u amara/qf_monitor.py
+Restart=always
+RestartSec=15
+Environment=PYTHONUNBUFFERED=1
+
+# Resource clamp — qf_monitor runs continuously; bound it
+CPUQuota=15%
+MemoryHigh=200M
+MemoryMax=250M
+
+[Install]
+WantedBy=default.target

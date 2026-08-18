@@ -1,0 +1,7 @@
+# Prevent Antigravity IDE from indexing sensitive files
+.env*
+*.pem
+*.key
+secrets.txt
+pg_data/
+n8n_data/

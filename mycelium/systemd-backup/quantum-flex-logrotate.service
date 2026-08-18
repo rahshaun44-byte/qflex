@@ -1,0 +1,6 @@
+[Unit]
+Description=Rotate Quantum Flex threat processor logs
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash -c 'LOG=/home/rahshaunchambers/.gemini/antigravity-ide/scratch/quantum-flex/logs/threat_processor.log; if [ -f "$LOG" ] && [ $(stat -c%%s "$LOG") -gt 1048576 ]; then mv "$LOG" "$LOG.$(date +%%Y%%m%%d%%H%%M%%S).bak"; fi'

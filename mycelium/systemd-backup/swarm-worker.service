@@ -1,0 +1,19 @@
+[Unit]
+Description=Quantum Flex Swarm Worker Daemon
+After=network.target amara-matrix.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/rahshaunchambers/mycelium
+ExecStart=/home/rahshaunchambers/mycelium/venv/bin/python3 -u mcp_layer/swarm_worker.py
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+# Resource clamp — swarm worker must not exhaust host resources
+CPUQuota=15%
+MemoryHigh=200M
+MemoryMax=250M
+
+[Install]
+WantedBy=default.target

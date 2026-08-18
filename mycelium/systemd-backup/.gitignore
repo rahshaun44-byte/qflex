@@ -1,0 +1,10 @@
+# Quantum Flex — Credential & Runtime Exclusions
+.env*
+*.pem
+*.key
+secrets.txt
+*.log
+*.isolated
+__pycache__/
+pg_data/
+n8n_data/

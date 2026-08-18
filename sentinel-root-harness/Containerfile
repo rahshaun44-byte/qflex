@@ -1,0 +1,16 @@
+FROM fedora:44
+
+# Install the exact requirements: GCC, Make, and the ROOT framework
+RUN dnf update -y && \
+    dnf install -y root root-core gcc-c++ make
+
+WORKDIR /opt/sentinel
+
+# Copy the source code into the container
+COPY sentinel_capture.cpp .
+
+# Compile the C++ code utilizing ROOT's internal configuration tool for accurate library mapping
+RUN g++ sentinel_capture.cpp -o sentinel_logger $(root-config --cflags --libs)
+
+# Execute the binary upon container launch
+CMD ["./sentinel_logger"]

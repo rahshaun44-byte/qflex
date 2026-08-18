@@ -1,0 +1,21 @@
+# Build and IDE directories
+build/
+out/
+.vscode/
+.cache/
+
+# Compiled object files and binaries
+*.o
+*.out
+*.exe
+*.dll
+*.so
+
+# Environment and Secrets
+.env*
+keys/
+qflex_pki/
+*.key
+*.pem
+*.pfx
+secrets*

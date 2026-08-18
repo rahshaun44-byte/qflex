@@ -1,0 +1,15 @@
+[Unit]
+Description=Quantum Flex Sentinel: Euclidean Drive Monitor
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/rahshaunchambers/mycelium
+ExecStart=/home/rahshaunchambers/mycelium/venv/bin/python3 -u sentinel/sentinel.py
+Environment=PYTHONUNBUFFERED=1
+StandardOutput=append:/run/user/1000/sentinel-drive.log
+StandardError=inherit
+
+# Resource clamp — Sentinel must never peg the host CPU
+CPUQuota=10%
+MemoryHigh=200M
+MemoryMax=250M

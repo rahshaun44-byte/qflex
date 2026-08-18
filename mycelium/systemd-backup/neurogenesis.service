@@ -1,0 +1,15 @@
+[Unit]
+Description=Quantum Flex Neurogenesis: Truth Log Pruning (7-day rolling window)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/rahshaunchambers/mycelium
+ExecStart=/home/rahshaunchambers/mycelium/venv/bin/python3 -u sentinel/neurogenesis.py
+Environment=PYTHONUNBUFFERED=1
+StandardOutput=append:/run/user/1000/neurogenesis.log
+StandardError=inherit
+
+# Resource clamp — pruning must never destabilize the host
+CPUQuota=10%
+MemoryHigh=150M
+MemoryMax=200M

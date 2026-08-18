@@ -1,0 +1,1 @@
+clang version 22.1.8 (Fedora 22.1.8-1.fc44)

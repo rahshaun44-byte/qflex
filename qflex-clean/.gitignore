@@ -1,0 +1,17 @@
+data/
+
+# Python/Rust Build Caches
+__pycache__/
+target/
+.xwin-cache/
+
+# Node.js
+node_modules/
+.npm
+.env
+*.key
+*.pem
+*_ed25519
+keys/
+qflex_pki/
+**/hardening/keys/

@@ -1,0 +1,54 @@
+version: '3.8'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# QUANTUM FLEX: GOLD STANDARD TEMPLATE
+# ─────────────────────────────────────────────────────────────────────────────
+# Usage: Do not edit manually. The Swarm IaC Deployer hydrates this file.
+# Features:
+# - Rootless Podman execution
+# - Read-only root filesystem
+# - Dropped kernel capabilities
+# - Isolated internal network (Zero-Trust)
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  ${SERVICE_NAME}:
+    image: ${IMAGE_NAME}:${IMAGE_TAG:-latest}
+    container_name: qf_${SERVICE_NAME}
+    
+    # ── Security Hardening ──
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+      # Enforce SELinux container isolation
+      - label=type:container_t
+    cap_drop:
+      - ALL
+    # Only keep exactly what is required (often none for basic web services)
+    # cap_add:
+    #   - NET_BIND_SERVICE
+    
+    # ── Resource Throttling ──
+    # Prevents a rogue container from triggering the AMARA iowait/RAM reflexes
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    
+    # ── Environment & Ports ──
+    environment:
+      - ENVIRONMENT=quantum_flex_swarm
+    ports:
+      # Binds strictly to localhost to prevent Tailscale mesh exposure
+      - "127.0.0.1:${HOST_PORT}:${CONTAINER_PORT}"
+      
+    # ── Network Isolation ──
+    networks:
+      - qf_isolated_net
+    restart: unless-stopped
+
+networks:
+  qf_isolated_net:
+    driver: bridge
+    internal: true # Disables outbound internet access

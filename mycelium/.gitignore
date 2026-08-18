@@ -1,0 +1,18 @@
+# Quantum Flex Operational Exclusions
+*.isolated
+*.log
+api_threat.txt
+api_env/
+.env*
+secrets.txt
+*.pem
+*.key
+n8n/data/
+__pycache__/
+
+# Generated/runtime state — not source, churns on every run
+sentinel/chroma_db/
+sentinel/ledger/ledger.json
+sentinel/bundle_server/
+sentinel/intelligence/*.db
+.tripwire/

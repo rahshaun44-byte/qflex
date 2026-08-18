@@ -1,0 +1,13 @@
+FROM registry.access.redhat.com/ubi8/python-39
+
+USER root
+WORKDIR /opt/sentinel
+
+# Cache layer optimization: Only rebuilds if requirements.txt alters
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY quarantine_chamber.py .
+
+# Allows passing the target file dynamically as a command-line argument
+ENTRYPOINT ["python3", "quarantine_chamber.py"]

@@ -1,0 +1,31 @@
+{
+    "thresholds": {
+        "phi_base": 0.75,
+        "volatility_warning_trigger": 10.0,
+        "volatility_critical_trigger": 25.0,
+        "trust_decay_rate_per_cycle": 0.05
+    },
+    "reputation_weights": {
+        "positive_event": 0.02,
+        "medium_anomaly": -0.05,
+        "high_anomaly": -0.1,
+        "critical_anomaly": -0.2
+    },
+    "volatility_weights": {
+        "CRITICAL": 5.0,
+        "HIGH": 3.0,
+        "MEDIUM": 1.0,
+        "LOW": 0.0
+    },
+    "scaling_modifiers": {
+        "moderate_volatility_boost": 0.15,
+        "high_volatility_boost": 0.3
+    },
+    "data_paths": {
+        "sqlite_db": "sentinel/data/amara_ledger.db",
+        "valid_sources": "sentinel/data/valid_sources.json"
+    },
+    "infrastructure": {
+        "cloudflare_tunnel_token": "${CLOUDFLARE_TUNNEL_TOKEN}"
+    }
+}

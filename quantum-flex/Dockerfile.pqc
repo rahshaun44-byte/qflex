@@ -1,0 +1,39 @@
+FROM fedora:40
+
+# Install build dependencies
+RUN dnf update -y && \
+    dnf install -y git cmake gcc ninja-build openssl-devel make wget perl python3 && \
+    dnf clean all
+
+# Build and install liboqs (The core quantum-safe algorithms)
+WORKDIR /build
+RUN git clone --depth 1 -b main https://github.com/open-quantum-safe/liboqs.git && \
+    cd liboqs && \
+    mkdir build && cd build && \
+    cmake -GNinja -DOQS_USE_OPENSSL=OFF -DCMAKE_INSTALL_PREFIX=/usr/local .. && \
+    ninja install
+
+# Build and install oqs-provider (The OpenSSL bridge)
+WORKDIR /build
+RUN git clone --depth 1 -b main https://github.com/open-quantum-safe/oqs-provider.git && \
+    cd oqs-provider && \
+    cmake -S . -B _build \
+          -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -Dliboqs_DIR=/usr/local \
+          -DOPENSSL_ROOT_DIR=/usr && \
+    cmake --build _build && \
+    cmake --install _build
+
+# We locate where oqsprovider.so was installed (often /usr/local/lib64/ossl-modules/)
+# and explicitly inject it into OpenSSL's system configuration so hybrid algos are recognized natively.
+RUN export OSSL_CONF="/etc/pki/tls/openssl.cnf" && \
+    # Ensure openssl_conf is set at the very beginning of the file
+    sed -i '1i openssl_conf = openssl_init\n' $OSSL_CONF && \
+    # Append the provider initialization logic
+    echo -e "\n[openssl_init]\nproviders = provider_sect\n\n[provider_sect]\ndefault = default_sect\noqsprovider = oqsprovider_sect\n\n[default_sect]\nactivate = 1\n\n[oqsprovider_sect]\nactivate = 1\n" >> $OSSL_CONF
+
+# Verify that the provider is loaded correctly and hybrid algorithms are available
+RUN openssl list -providers | grep -i oqsprovider
+
+WORKDIR /app
+CMD ["/bin/bash"]

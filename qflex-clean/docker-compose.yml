@@ -1,0 +1,53 @@
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: qflex-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-qflex_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: qflex_core
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data:Z
+    ports:
+      - "127.0.0.1:5432:5432"
+    restart: unless-stopped
+
+  nats:
+    image: nats:latest
+    container_name: qflex-nats
+    command: ["-js"] # Enables JetStream for micro-data persistence
+    volumes:
+      - ./data/nats:/data:Z
+    ports:
+      - "127.0.0.1:4222:4222"
+      - "127.0.0.1:8222:8222"
+    restart: unless-stopped
+
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: qflex-chroma
+    volumes:
+      - ./data/chroma:/chroma/chroma:Z
+    ports:
+      - "127.0.0.1:8002:8000"
+    restart: unless-stopped
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:2.21.8
+    container_name: qflex-n8n
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=qflex_core
+      - DB_POSTGRESDB_USER=${POSTGRES_USER:-qflex_admin}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - ./data/n8n:/home/node/.n8n:Z
+    ports:
+      - "127.0.0.1:5678:5678"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+

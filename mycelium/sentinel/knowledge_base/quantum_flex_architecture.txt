@@ -1,0 +1,96 @@
+QUANTUM FLEX ARCHITECTURE v1.0
+Senior Software Executive Chief: Rahshaun Chambers
+System Posture: Zero-Trust, Decentralized, Rootless Podman, Native Fedora SELinux.
+
+SYSTEM OVERVIEW
+Quantum Flex is a decentralized, biologically-inspired infrastructure built on Fedora 44.
+It mimics the Corydalus cornutus (Eastern Dobsonfly) life cycle as an architectural pattern.
+The system enforces homeostasis through autonomous monitoring and resource throttling.
+
+NODE DEFINITIONS
+
+1. Ghost Node Agent (decision_gate.py)
+- Role: Central nervous system telemetry loop
+- Reads: /proc/meminfo, /proc/loadavg, vmstat iowait
+- Writes: sentinel/ledger/ledger.json every 60 seconds
+- Computes a biological confidence score from real kernel metrics
+- Decision gate: EXECUTE if confidence >= 0.75, else HARD_STOP
+- Systemd service: ghost-node-agent.service
+
+2. A.M.A.R.A. Dashboard (dashboard.py)
+- Role: Visual intelligence sync interface
+- Port: 8000 (0.0.0.0 - Tailscale mesh accessible)
+- Shows: Live telemetry, node registry, throttle events, RAG query interface
+- Pulls data from: ledger.json, PostgreSQL amara-matrix, Athena health check
+- Auto-refreshes every 30 seconds
+- Systemd service: amara-dashboard.service
+
+3. A.T.H.E.N.A. RAG Node (athena_api.py)
+- Role: Cognitive memory and semantic retrieval node
+- Port: 8001 (127.0.0.1 only - never externally exposed)
+- ChromaDB collection: quantum_flex_kb
+- Embedding model: nomic-embed-text (via Ollama)
+- Generation model: gemma3:4b (via Ollama)
+- Soft memory limit: 50,000 vectors max
+- Endpoints: /health, /query, /ingest, /stats
+- Systemd service: athena-node.service
+
+4. A.M.A.R.A. Biological Monitor (qf_monitor.py)
+- Role: Homeostatic control plane - the AMARA nervous system
+- Polls: every 30 seconds
+- Thresholds: iowait > 15%, RAM > 85%, Swap > 512MB
+- Reflex action: podman pause athena-node when critical
+- Recovery: podman unpause athena-node when stable
+- Logs all events to PostgreSQL telemetry_log and throttle_events tables
+- Systemd service: qf-monitor.service
+
+5. Core API Gateway (api_node/main.py)
+- Role: External HTTP interface routing to all internal nodes
+- Port: 8002 (127.0.0.1 only)
+- Endpoints: /status, /query (routes to Athena), /ingest (routes to Sentinel)
+- Systemd service: api-node.service
+
+6. amara-matrix (PostgreSQL 15)
+- Role: Truth Log persistence layer
+- Container: podman amara-matrix
+- Database: telemetry
+- User: ghostnode
+- Tables: telemetry_log, throttle_events, node_registry, packet_log, threat_matrix
+- Port: 5432 (localhost only)
+
+7. Sentinel Pipeline
+- Role: File quarantine and cryptographic analysis
+- quarantine_chamber.py: SHA-256 hash, chmod 000, rename to .isolated
+- run_sentinel.py: Stages files, detonates Podman quarantine container
+- Network: --network=none (complete vacuum)
+- SELinux context: container_file_t
+
+BIOLOGICAL MAPPING (Corydalus cornutus)
+
+Hellgrammite Strategy (Larval Phase):
+- Bio: Hellgrammites only survive in high dissolved-oxygen water (bio-indicator)
+- Tech: AMARA monitors iowait as dissolved oxygen equivalent
+- If iowait > 15%: environment is "polluted", Athena is throttled
+
+Adult Mandible Strategy (Control Plane Signaling):
+- Bio: Male mandibles are for display/signaling, not feeding
+- Tech: Control plane (AMARA) is decoupled from data plane (Athena)
+- AMARA never carries user data, only management signals
+
+PERFORMANCE THRESHOLDS
+- iowait critical: 15%
+- RAM critical: 85% of 14 GiB
+- Swap warning: 512 MB
+- ChromaDB soft limit: 50,000 vectors
+- Docker hard limit: 4 GiB (memory cgroup)
+
+HARDWARE BASELINE
+- CPU: AMD Ryzen AI 5 340 (6 cores / 12 threads)
+- NPU: AMD Neural Processing Unit (dedicated AI silicon)
+- GPU: AMD Radeon 840M (integrated)
+- RAM: 14 GiB
+- Swap: 8 GiB
+- Disk: 475 GB / 50 GB used
+- OS: Fedora 44 KDE Plasma
+- Kernel: 7.1.3-200.fc44.x86_64
+- Container: Podman (rootless, cgroup v2 / systemd)

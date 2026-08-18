@@ -1,0 +1,50 @@
+services:
+  logistics-pg:
+    image: postgres:15-alpine
+    container_name: logistics-pg
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run
+      - /var/run/postgresql
+    mem_limit: 4.5g
+    cpus: 1.5
+    command: ["postgres", "-c", "shared_buffers=3781MB", "-c", "synchronous_commit=off"]
+    restart: unless-stopped
+    # Removed no-new-privileges due to SELinux enforcing + nnp_transition denial
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+
+  edge-node:
+    image: python:3.11-slim
+    container_name: edge-node
+    network_mode: "host"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=127.0.0.1
+      - POSTGRES_PORT=5433
+      - EDGE_PORT=8003
+    volumes:
+      - ./edge_node.py:/app/edge_node.py:Z
+    working_dir: /app
+    command: >
+      bash -c "pip install fastapi pydantic uvicorn asyncpg && python edge_node.py"
+
+volumes:
+  pg_data:

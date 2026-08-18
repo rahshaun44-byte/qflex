@@ -1,0 +1,10 @@
+[Unit]
+Description=Quantum Flex Sentinel Timer (30s polling interval)
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=30s
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

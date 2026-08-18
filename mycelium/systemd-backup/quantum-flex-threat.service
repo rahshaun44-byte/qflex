@@ -1,0 +1,12 @@
+[Unit]
+Description=Quantum Flex Threat Ingestion Pipeline Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/rahshaunchambers/.gemini/antigravity-ide/scratch/quantum-flex_HIDDEN/bin/threat_processor.py /home/rahshaunchambers/.gemini/antigravity-ide/scratch/quantum-flex_HIDDEN
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
